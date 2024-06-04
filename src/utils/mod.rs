@@ -1,2 +1,2 @@
-pub mod fileutils;
 pub mod error;
+pub mod fileutils;

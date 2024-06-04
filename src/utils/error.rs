@@ -1,9 +1,9 @@
-use std::fmt;
 use std::error::Error;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct IllegalArgumentError {
-    message: String
+    message: String,
 }
 
 impl IllegalArgumentError {

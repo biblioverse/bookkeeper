@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
-mod commands;
 mod archives;
+mod commands;
 mod utils;
 
 use commands::scan;
@@ -31,8 +31,12 @@ fn main() {
             let scan_result = scan::scan(path);
 
             match scan_result {
-                Ok(_) => { println!("Scanned all files"); }
-                Err(error) => { println!("Oh noes: {}", error); }
+                Ok(_) => {
+                    println!("Scanned all files");
+                }
+                Err(error) => {
+                    println!("Oh noes: {}", error);
+                }
             }
         }
         None => {

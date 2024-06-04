@@ -1,32 +1,35 @@
-use std::path::Path;
+use super::utils::error::IllegalArgumentError;
+use super::utils::fileutils::{is_pdf, is_zip};
+use cb::get_book_info_cba;
+use pdf::get_book_info_pdf;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
+use std::path::Path;
 
 pub mod cb;
 pub mod pdf;
 
-use cb::get_book_info_cba;
-use pdf::get_book_info_pdf;
-use super::utils::fileutils::{is_zip, is_pdf};
-use super::utils::error::IllegalArgumentError;
-
+#[derive(Serialize, Deserialize)]
 pub struct BookInfo {
-    pages: usize
-}
-
-impl BookInfo {
-    pub fn page_count(&self) -> usize {
-        return self.pages
-    }
+    title: String,
+    pages: usize,
+    authors: Option<Vec<String>>,
+    publisher: Option<String>,
+    published_date: Option<String>,
+    keywords: Option<Vec<String>>,
 }
 
 pub fn get_book_info(file: &Path) -> Result<BookInfo, Box<dyn Error>> {
-    if is_zip(&file) {
-        return Ok(get_book_info_cba(file)?);
+    if is_zip(file) {
+        return get_book_info_cba(file);
     }
 
-    if is_pdf(&file) {
-        return Ok(get_book_info_pdf(file)?)
+    if is_pdf(file) {
+        return get_book_info_pdf(file);
     }
 
-    return Err(Box::new(IllegalArgumentError::new(format!("We don't know how to open this archive '{:?}'", file))));
+    Err(Box::new(IllegalArgumentError::new(format!(
+        "We don't know how to open this archive '{:?}'",
+        file
+    ))))
 }

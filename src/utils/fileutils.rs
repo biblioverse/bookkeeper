@@ -13,7 +13,7 @@ pub fn is_zip(entry: &Path) -> bool {
         }
     }
 
-    return false;
+    false
 }
 
 pub fn is_pdf(entry: &Path) -> bool {
@@ -27,5 +27,5 @@ pub fn is_pdf(entry: &Path) -> bool {
         }
     }
 
-    return false;
+    false
 }
