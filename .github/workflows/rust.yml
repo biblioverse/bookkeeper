@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install libarchive
+        run: sudo apt-get install -y libarchive
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - run: cargo test --all-features
 
@@ -18,7 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Ensure rustfmt is installed and setup problem matcher
+      - name: Install libarchive
+        run: sudo apt-get install -y libarchive
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: clippy, rustfmt
