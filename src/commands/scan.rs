@@ -16,6 +16,7 @@ struct Metadata {
     path: String,
     status: String,
     size: u64,
+    hash: String,
     book: BookInfo,
 }
 
@@ -70,6 +71,7 @@ fn scan_book(full_scan_path: &Path, filepath: &Path) -> Result<String, Box<dyn s
     let computed = Metadata {
         path: format!("{:?}", filepath.strip_prefix(full_scan_path)?),
         status: "success".to_string(),
+        hash: hash_file(filepath)?,
         size: metadata.len().to_owned(),
         book,
     };

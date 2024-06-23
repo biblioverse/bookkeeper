@@ -28,7 +28,7 @@ pub fn get_book_info_cba(file: &Path) -> Result<BookInfo, Box<dyn std::error::Er
     //println!("content={:?}", &file_names[0]);
 
     // Find metadata file
-    let _excluded_files = file_names
+    file_names
         .clone()
         .into_iter()
         .filter(|file| !valid_page(file))
