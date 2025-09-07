@@ -1,6 +1,14 @@
 # Bookkeeper
 
-A tool that will do all the CBR/CBZ/PDF 
+A to extract metadata and pages from your books in various formats
+
+|       Feature | .cbr | .cbz | .cb7 | .cbt | .pdf | .epub | .mobi |
+| ------------: | :--: | :--: | :--: | :--: | :--: | :---: | :---: |
+|      Get info | ⚠️¹  | ⚠️¹  | ⚠️¹  | ⚠️¹  |  ✅  |  ❌   |  ❌   |
+| Extract pages |  ✅  |  ✅  |  ✅  |  ✅  |  ✅  |   -   |   -   |
+| Extract Cover |  ❌  |  ❌  |  ❌  |  ❌  |  ❌  |  ❌   |  ❌   |
+
+1. Metadata is not yet extracted from [`ComicInfo.xml`](https://github.com/anansi-project/comicinfo)
 
 ## Commands
 
@@ -9,7 +17,8 @@ A tool that will do all the CBR/CBZ/PDF
 Scan for comic books in the folder, recursively.
 Each book file found will be reported as a one-line JSON entry.
 
-> Partially implemented
+> [!WARNING]
+> Partially implemented, missing some formats and extraction of `ComicInfo.xml`
 
 ```bash
 ❯ ./bookkeeper scan fixtures
@@ -49,3 +58,10 @@ Extraction complete. 36 files extracted to .../out
     },
     ...
 ```
+
+### `bookeeper extractCover <book> <extractTo>.<format>`
+
+Allows to extract the cover from a book.
+
+> [!WARNING]
+> Not implemented yet
