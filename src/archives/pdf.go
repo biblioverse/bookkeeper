@@ -3,7 +3,6 @@ package archives
 import (
 	"fmt"
 	"image/jpeg"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -39,7 +38,7 @@ func init() {
 
 func getBookInfoPDF(path string) (BookInfo, error) {
 	// Load the PDF file into a byte array
-	pdfBytes, err := ioutil.ReadFile(path)
+	pdfBytes, err := os.ReadFile(path)
 	if err != nil {
 		return BookInfo{}, fmt.Errorf("failed to read PDF file: %w", err)
 	}
@@ -108,7 +107,7 @@ func getBookInfoPDF(path string) (BookInfo, error) {
 // extractPDF renders PDF pages as JPEG images using go-pdfium
 func extractPDF(inputFile, outputFolder string) ([]Page, error) {
 	// Load the PDF file into a byte array
-	pdfBytes, err := ioutil.ReadFile(inputFile)
+	pdfBytes, err := os.ReadFile(inputFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read PDF file: %w", err)
 	}
