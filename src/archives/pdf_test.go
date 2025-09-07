@@ -5,26 +5,21 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestReadMetadata(t *testing.T) {
 	path := filepath.Join("..", "..", "fixtures", "testfile.pdf")
+
 	book, err := getBookInfoPDF(path)
-	if err != nil {
-		t.Fatalf("read pdf: %v", err)
-	}
-	if book.Pages != 1 {
-		t.Fatalf("pages = %d, want 1", book.Pages)
-	}
-	if book.Title != "Title of the Book" {
-		t.Fatalf("title = %q, want %q", book.Title, "Title of the Book")
-	}
-	if len(book.Authors) != 1 || book.Authors[0] != "The Author" {
-		t.Fatalf("authors = %#v, want [The Author]", book.Authors)
-	}
-	if len(book.Keywords) != 2 || book.Keywords[0] != "book" || book.Keywords[1] != "fantasy" {
-		t.Fatalf("keywords = %#v, want [book fantasy]", book.Keywords)
-	}
+	require.NoError(t, err, "should successfully read PDF metadata")
+
+	assert.Equal(t, 1, book.Pages, "should have exactly 1 page")
+	assert.Equal(t, "Title of the Book", book.Title, "should have correct title")
+	assert.Equal(t, []string{"The Author"}, book.Authors, "should have correct authors")
+	assert.Equal(t, []string{"book", "fantasy"}, book.Keywords, "should have correct keywords")
 }
 
 func TestExtractPDF(t *testing.T) {
@@ -34,57 +29,45 @@ func TestExtractPDF(t *testing.T) {
 
 	// Extract files
 	extractedFiles, err := extractPDF(inputPath, outputDir)
-	if err != nil {
-		t.Fatalf("extractPDF() error = %v", err)
-	}
+	require.NoError(t, err, "should successfully extract PDF")
 
 	// Verify extraction results
-	if len(extractedFiles) == 0 {
-		t.Fatal("expected extracted files, got none")
-	}
+	assert.NotEmpty(t, extractedFiles, "should extract files from PDF")
 
 	// For the test PDF, we expect exactly 1 page
 	expectedFiles := []string{"page_01.jpg"}
-	if len(extractedFiles) != len(expectedFiles) {
-		t.Errorf("expected %d files, got %d", len(expectedFiles), len(extractedFiles))
-	}
+	assert.Len(t, extractedFiles, len(expectedFiles), "should extract expected number of files")
 
 	// Check that all extracted files exist and are JPEG images
 	for _, page := range extractedFiles {
 		fullPath := filepath.Join(outputDir, page.Path)
-		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("extracted file %s does not exist", page.Path)
-		}
+		assert.FileExists(t, fullPath, "extracted file %s should exist", page.Path)
 
 		// Verify it's a JPEG file
 		ext := strings.ToLower(filepath.Ext(page.Path))
-		if ext != ".jpg" && ext != ".jpeg" {
-			t.Errorf("extracted file %s is not a JPEG (ext: %s)", page.Path, ext)
-		}
+		assert.Contains(t, []string{".jpg", ".jpeg"}, ext,
+			"extracted file %s should be a JPEG", page.Path)
 
 		// Verify the file is not empty
 		info, err := os.Stat(fullPath)
-		if err != nil {
-			t.Errorf("failed to stat file %s: %v", page.Path, err)
-		}
-		if info.Size() == 0 {
-			t.Errorf("extracted file %s is empty", page.Path)
-		}
+		require.NoError(t, err, "should be able to stat file %s", page.Path)
+		assert.Greater(t, info.Size(), int64(0), "extracted file %s should not be empty", page.Path)
 
 		// Verify dimensions are set
-		if page.Width <= 0 || page.Height <= 0 {
-			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
-		}
+		assert.Greater(t, page.Width, 0, "width should be greater than 0 for %s", page.Path)
+		assert.Greater(t, page.Height, 0, "height should be greater than 0 for %s", page.Path)
 	}
 
 	// Verify file naming convention (zero-padded)
 	for i, page := range extractedFiles {
-		expectedName := strings.Replace(page.Path, ".jpg", "", 1)
-		if !strings.HasPrefix(expectedName, "page_0") && len(expectedName) > 1 {
-			t.Errorf("file %s should be zero-padded", page.Path)
+		if i+1 < 10 {
+			assert.True(t, strings.HasPrefix(page.Path, "page_0"),
+				"file %s should start with page_0 for single digits", page.Path)
 		}
-		if i+1 < 10 && !strings.HasPrefix(page.Path, "page_0") {
-			t.Errorf("file %s should start with page_0 for single digits", page.Path)
+		expectedName := strings.Replace(page.Path, ".jpg", "", 1)
+		if len(expectedName) > 1 {
+			assert.True(t, strings.HasPrefix(expectedName, "page_0"),
+				"file %s should be zero-padded", page.Path)
 		}
 	}
 
@@ -121,11 +104,10 @@ func TestExtractPDFErrorCases(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := extractPDF(tt.inputPath, tt.outputDir)
-			if tt.expectError && err == nil {
-				t.Error("expected error, got nil")
-			}
-			if !tt.expectError && err != nil {
-				t.Errorf("unexpected error: %v", err)
+			if tt.expectError {
+				assert.Error(t, err, "should return error for %s", tt.name)
+			} else {
+				assert.NoError(t, err, "should not return error for %s", tt.name)
 			}
 		})
 	}
@@ -139,31 +121,22 @@ func TestExtractPDFWithUnidocLicense(t *testing.T) {
 
 	// Extract files
 	extractedFiles, err := extractPDF(inputPath, outputDir)
-	if err != nil {
-		t.Fatalf("extractPDF() error = %v", err)
-	}
+	require.NoError(t, err, "should successfully extract PDF with unidoc/unipdf")
 
 	// Should successfully extract at least one file
-	if len(extractedFiles) == 0 {
-		t.Fatal("expected at least one extracted file")
-	}
+	assert.NotEmpty(t, extractedFiles, "should extract at least one file")
 
 	// Verify the first file is a valid JPEG
 	firstFile := filepath.Join(outputDir, extractedFiles[0].Path)
 	info, err := os.Stat(firstFile)
-	if err != nil {
-		t.Fatalf("failed to stat first extracted file: %v", err)
-	}
+	require.NoError(t, err, "should be able to stat first extracted file")
 
 	// File should not be empty
-	if info.Size() == 0 {
-		t.Error("extracted JPEG file is empty")
-	}
+	assert.Greater(t, info.Size(), int64(0), "extracted JPEG file should not be empty")
 
 	// File should be reasonably sized (at least 1KB for a simple PDF page)
-	if info.Size() < 1024 {
-		t.Errorf("extracted JPEG file is too small: %d bytes", info.Size())
-	}
+	assert.GreaterOrEqual(t, info.Size(), int64(1024),
+		"extracted JPEG file should be at least 1KB, got %d bytes", info.Size())
 
 	t.Logf("Successfully extracted %d files with unidoc/unipdf", len(extractedFiles))
 }
