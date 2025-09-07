@@ -50,36 +50,41 @@ func TestExtractPDF(t *testing.T) {
 	}
 
 	// Check that all extracted files exist and are JPEG images
-	for _, file := range extractedFiles {
-		fullPath := filepath.Join(outputDir, file)
+	for _, page := range extractedFiles {
+		fullPath := filepath.Join(outputDir, page.Path)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("extracted file %s does not exist", file)
+			t.Errorf("extracted file %s does not exist", page.Path)
 		}
 
 		// Verify it's a JPEG file
-		ext := strings.ToLower(filepath.Ext(file))
+		ext := strings.ToLower(filepath.Ext(page.Path))
 		if ext != ".jpg" && ext != ".jpeg" {
-			t.Errorf("extracted file %s is not a JPEG (ext: %s)", file, ext)
+			t.Errorf("extracted file %s is not a JPEG (ext: %s)", page.Path, ext)
 		}
 
 		// Verify the file is not empty
 		info, err := os.Stat(fullPath)
 		if err != nil {
-			t.Errorf("failed to stat file %s: %v", file, err)
+			t.Errorf("failed to stat file %s: %v", page.Path, err)
 		}
 		if info.Size() == 0 {
-			t.Errorf("extracted file %s is empty", file)
+			t.Errorf("extracted file %s is empty", page.Path)
+		}
+
+		// Verify dimensions are set
+		if page.Width <= 0 || page.Height <= 0 {
+			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
 		}
 	}
 
 	// Verify file naming convention (zero-padded)
-	for i, file := range extractedFiles {
-		expectedName := strings.Replace(file, ".jpg", "", 1)
+	for i, page := range extractedFiles {
+		expectedName := strings.Replace(page.Path, ".jpg", "", 1)
 		if !strings.HasPrefix(expectedName, "page_0") && len(expectedName) > 1 {
-			t.Errorf("file %s should be zero-padded", file)
+			t.Errorf("file %s should be zero-padded", page.Path)
 		}
-		if i+1 < 10 && !strings.HasPrefix(file, "page_0") {
-			t.Errorf("file %s should start with page_0 for single digits", file)
+		if i+1 < 10 && !strings.HasPrefix(page.Path, "page_0") {
+			t.Errorf("file %s should start with page_0 for single digits", page.Path)
 		}
 	}
 
@@ -144,7 +149,7 @@ func TestExtractPDFWithUnidocLicense(t *testing.T) {
 	}
 
 	// Verify the first file is a valid JPEG
-	firstFile := filepath.Join(outputDir, extractedFiles[0])
+	firstFile := filepath.Join(outputDir, extractedFiles[0].Path)
 	info, err := os.Stat(firstFile)
 	if err != nil {
 		t.Fatalf("failed to stat first extracted file: %v", err)

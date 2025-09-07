@@ -12,6 +12,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jolestar/go-commons-pool/v2 v2.1.2 // indirect
 	github.com/tetratelabs/wazero v1.9.0 // indirect
+	golang.org/x/image v0.30.0 // indirect
 	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 )

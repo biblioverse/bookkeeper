@@ -3,10 +3,23 @@ package archives
 
 import (
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"strings"
+
+	_ "golang.org/x/image/webp"
 )
+
+// Page represents a single page with its file path and dimensions
+type Page struct {
+	Path   string `json:"path"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
+}
 
 // BookInfo holds metadata about a book
 type BookInfo struct {
@@ -32,8 +45,8 @@ func GetBookInfo(path string) (BookInfo, error) {
 }
 
 // Extract extracts files from an archive or PDF into the output folder
-// Returns a list of extracted file paths relative to the output folder
-func Extract(inputFile, outputFolder string) ([]string, error) {
+// Returns a list of extracted pages with file paths and dimensions
+func Extract(inputFile, outputFolder string) ([]Page, error) {
 	// Create output folder if it doesn't exist
 	if err := os.MkdirAll(outputFolder, 0755); err != nil {
 		return nil, fmt.Errorf("failed to create output folder: %w", err)
@@ -41,14 +54,14 @@ func Extract(inputFile, outputFolder string) ([]string, error) {
 
 	// Determine file type and extract accordingly
 	ext := strings.ToLower(filepath.Ext(inputFile))
-	var extractedFiles []string
+	var extractedPages []Page
 	var err error
 
 	switch ext {
 	case ".cbz", ".cbr", ".cb7", ".cbt":
-		extractedFiles, err = extractArchive(inputFile, outputFolder)
+		extractedPages, err = extractArchive(inputFile, outputFolder)
 	case ".pdf":
-		extractedFiles, err = extractPDF(inputFile, outputFolder)
+		extractedPages, err = extractPDF(inputFile, outputFolder)
 	default:
 		return nil, fmt.Errorf("unsupported file format: %s", ext)
 	}
@@ -57,7 +70,23 @@ func Extract(inputFile, outputFolder string) ([]string, error) {
 		return nil, fmt.Errorf("extraction failed: %w", err)
 	}
 
-	return extractedFiles, nil
+	return extractedPages, nil
+}
+
+// getImageDimensions returns the width and height of an image file
+func getImageDimensions(imagePath string) (int, int, error) {
+	file, err := os.Open(imagePath)
+	if err != nil {
+		return 0, 0, err
+	}
+	defer file.Close()
+
+	config, _, err := image.DecodeConfig(file)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return config.Width, config.Height, nil
 }
 
 // getFileExtension extracts and normalizes the file extension from a path

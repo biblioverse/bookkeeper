@@ -82,16 +82,21 @@ func TestExtractCBZ(t *testing.T) {
 	}
 
 	// Check that all extracted files exist and are images
-	for _, file := range extractedFiles {
-		fullPath := filepath.Join(outputDir, file)
+	for _, page := range extractedFiles {
+		fullPath := filepath.Join(outputDir, page.Path)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("extracted file %s does not exist", file)
+			t.Errorf("extracted file %s does not exist", page.Path)
 		}
 
 		// Verify it's an image file
-		ext := strings.ToLower(filepath.Ext(file))
+		ext := strings.ToLower(filepath.Ext(page.Path))
 		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
-			t.Errorf("extracted file %s is not an image (ext: %s)", file, ext)
+			t.Errorf("extracted file %s is not an image (ext: %s)", page.Path, ext)
+		}
+
+		// Verify dimensions are set
+		if page.Width <= 0 || page.Height <= 0 {
+			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
 		}
 	}
 
@@ -102,9 +107,9 @@ func TestExtractCBZ(t *testing.T) {
 		t.Errorf("expected %d files, got %d", len(expectedOrder), len(extractedFiles))
 	}
 
-	for i, file := range extractedFiles {
-		if i < len(expectedOrder) && file != expectedOrder[i] {
-			t.Errorf("file order mismatch at index %d: got %s, want %s", i, file, expectedOrder[i])
+	for i, page := range extractedFiles {
+		if i < len(expectedOrder) && page.Path != expectedOrder[i] {
+			t.Errorf("file order mismatch at index %d: got %s, want %s", i, page.Path, expectedOrder[i])
 		}
 	}
 
@@ -128,16 +133,21 @@ func TestExtractCBR(t *testing.T) {
 	}
 
 	// Check that all extracted files exist and are images
-	for _, file := range extractedFiles {
-		fullPath := filepath.Join(outputDir, file)
+	for _, page := range extractedFiles {
+		fullPath := filepath.Join(outputDir, page.Path)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("extracted file %s does not exist", file)
+			t.Errorf("extracted file %s does not exist", page.Path)
 		}
 
 		// Verify it's an image file
-		ext := strings.ToLower(filepath.Ext(file))
+		ext := strings.ToLower(filepath.Ext(page.Path))
 		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
-			t.Errorf("extracted file %s is not an image (ext: %s)", file, ext)
+			t.Errorf("extracted file %s is not an image (ext: %s)", page.Path, ext)
+		}
+
+		// Verify dimensions are set
+		if page.Width <= 0 || page.Height <= 0 {
+			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
 		}
 	}
 

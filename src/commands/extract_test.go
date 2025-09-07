@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/biblioteca/bookkeeper/src/archives"
 )
 
 func TestExtractCBZ(t *testing.T) {
@@ -31,30 +33,35 @@ func TestExtractCBZ(t *testing.T) {
 		t.Fatalf("failed to read pages.json: %v", err)
 	}
 
-	var pages []string
-	if err := json.Unmarshal(pagesData, &pages); err != nil {
+	var pagesJSON PagesJSON
+	if err := json.Unmarshal(pagesData, &pagesJSON); err != nil {
 		t.Fatalf("failed to unmarshal pages.json: %v", err)
 	}
 
-	if len(pages) == 0 {
-		t.Fatal("pages.json is empty")
+	if len(pagesJSON.Pages) == 0 {
+		t.Fatal("pages.json contains no pages")
 	}
 
 	// Verify all pages are image files
-	for _, page := range pages {
-		ext := strings.ToLower(filepath.Ext(page))
+	for _, page := range pagesJSON.Pages {
+		ext := strings.ToLower(filepath.Ext(page.Path))
 		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
-			t.Errorf("page %s is not an image file", page)
+			t.Errorf("page %s is not an image file", page.Path)
 		}
 
 		// Verify the file exists
-		fullPath := filepath.Join(outputDir, page)
+		fullPath := filepath.Join(outputDir, page.Path)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("page file %s does not exist", page)
+			t.Errorf("page file %s does not exist", page.Path)
+		}
+
+		// Verify dimensions are set
+		if page.Width <= 0 || page.Height <= 0 {
+			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
 		}
 	}
 
-	t.Logf("Successfully extracted %d pages from CBZ", len(pages))
+	t.Logf("Successfully extracted %d pages from CBZ", len(pagesJSON.Pages))
 }
 
 func TestExtractCBR(t *testing.T) {
@@ -80,30 +87,35 @@ func TestExtractCBR(t *testing.T) {
 		t.Fatalf("failed to read pages.json: %v", err)
 	}
 
-	var pages []string
-	if err := json.Unmarshal(pagesData, &pages); err != nil {
+	var pagesJSON PagesJSON
+	if err := json.Unmarshal(pagesData, &pagesJSON); err != nil {
 		t.Fatalf("failed to unmarshal pages.json: %v", err)
 	}
 
-	if len(pages) == 0 {
-		t.Fatal("pages.json is empty")
+	if len(pagesJSON.Pages) == 0 {
+		t.Fatal("pages.json contains no pages")
 	}
 
 	// Verify all pages are image files
-	for _, page := range pages {
-		ext := strings.ToLower(filepath.Ext(page))
+	for _, page := range pagesJSON.Pages {
+		ext := strings.ToLower(filepath.Ext(page.Path))
 		if ext != ".jpg" && ext != ".jpeg" && ext != ".png" && ext != ".webp" {
-			t.Errorf("page %s is not an image file", page)
+			t.Errorf("page %s is not an image file", page.Path)
 		}
 
 		// Verify the file exists
-		fullPath := filepath.Join(outputDir, page)
+		fullPath := filepath.Join(outputDir, page.Path)
 		if _, err := os.Stat(fullPath); os.IsNotExist(err) {
-			t.Errorf("page file %s does not exist", page)
+			t.Errorf("page file %s does not exist", page.Path)
+		}
+
+		// Verify dimensions are set
+		if page.Width <= 0 || page.Height <= 0 {
+			t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
 		}
 	}
 
-	t.Logf("Successfully extracted %d pages from CBR", len(pages))
+	t.Logf("Successfully extracted %d pages from CBR", len(pagesJSON.Pages))
 }
 
 func TestExtractPDF(t *testing.T) {
@@ -129,39 +141,44 @@ func TestExtractPDF(t *testing.T) {
 		t.Fatalf("failed to read pages.json: %v", err)
 	}
 
-	var pages []string
-	if err := json.Unmarshal(pagesData, &pages); err != nil {
+	var pagesJSON PagesJSON
+	if err := json.Unmarshal(pagesData, &pagesJSON); err != nil {
 		t.Fatalf("failed to unmarshal pages.json: %v", err)
 	}
 
 	// For the test PDF, we expect exactly 1 page
-	if len(pages) != 1 {
-		t.Errorf("expected 1 page, got %d", len(pages))
+	if len(pagesJSON.Pages) != 1 {
+		t.Errorf("expected 1 page, got %d", len(pagesJSON.Pages))
 	}
 
 	// Verify the page is a JPEG file
-	page := pages[0]
-	ext := strings.ToLower(filepath.Ext(page))
+	page := pagesJSON.Pages[0]
+	ext := strings.ToLower(filepath.Ext(page.Path))
 	if ext != ".jpg" && ext != ".jpeg" {
-		t.Errorf("page %s is not a JPEG file (ext: %s)", page, ext)
+		t.Errorf("page %s is not a JPEG file (ext: %s)", page.Path, ext)
 	}
 
 	// Verify the file exists and is not empty
-	fullPath := filepath.Join(outputDir, page)
+	fullPath := filepath.Join(outputDir, page.Path)
 	info, err := os.Stat(fullPath)
 	if err != nil {
-		t.Errorf("page file %s does not exist: %v", page, err)
+		t.Errorf("page file %s does not exist: %v", page.Path, err)
 	}
 	if info.Size() == 0 {
-		t.Errorf("page file %s is empty", page)
+		t.Errorf("page file %s is empty", page.Path)
 	}
 
 	// Verify file naming convention (zero-padded)
-	if !strings.HasPrefix(page, "page_0") {
-		t.Errorf("page file %s should be zero-padded", page)
+	if !strings.HasPrefix(page.Path, "page_0") {
+		t.Errorf("page file %s should be zero-padded", page.Path)
 	}
 
-	t.Logf("Successfully extracted %d pages from PDF", len(pages))
+	// Verify dimensions are set
+	if page.Width <= 0 || page.Height <= 0 {
+		t.Errorf("invalid dimensions for %s: %dx%d", page.Path, page.Width, page.Height)
+	}
+
+	t.Logf("Successfully extracted %d pages from PDF", len(pagesJSON.Pages))
 }
 
 func TestExtractErrorCases(t *testing.T) {
@@ -207,10 +224,14 @@ func TestExtractErrorCases(t *testing.T) {
 func TestCreatePagesJSON(t *testing.T) {
 	// Setup
 	outputDir := t.TempDir()
-	files := []string{"01.jpg", "02.jpg", "03.jpg"}
+	pages := []archives.Page{
+		{Path: "01.jpg", Width: 800, Height: 600},
+		{Path: "02.jpg", Width: 1024, Height: 768},
+		{Path: "03.jpg", Width: 1200, Height: 900},
+	}
 
 	// Create pages.json
-	err := createPagesJSON(files, outputDir)
+	err := createPagesJSON(pages, outputDir)
 	if err != nil {
 		t.Fatalf("createPagesJSON() error = %v", err)
 	}
@@ -227,19 +248,28 @@ func TestCreatePagesJSON(t *testing.T) {
 		t.Fatalf("failed to read pages.json: %v", err)
 	}
 
-	var result []string
+	var result PagesJSON
 	if err := json.Unmarshal(pagesData, &result); err != nil {
 		t.Fatalf("failed to unmarshal pages.json: %v", err)
 	}
 
 	// Verify content matches
-	if len(result) != len(files) {
-		t.Errorf("expected %d files, got %d", len(files), len(result))
+	if len(result.Pages) != len(pages) {
+		t.Errorf("expected %d pages, got %d", len(pages), len(result.Pages))
 	}
 
-	for i, file := range files {
-		if i < len(result) && result[i] != file {
-			t.Errorf("file at index %d: got %s, want %s", i, result[i], file)
+	for i, expectedPage := range pages {
+		if i < len(result.Pages) {
+			resultPage := result.Pages[i]
+			if resultPage.Path != expectedPage.Path {
+				t.Errorf("page at index %d: got path %s, want %s", i, resultPage.Path, expectedPage.Path)
+			}
+			if resultPage.Width != expectedPage.Width {
+				t.Errorf("page at index %d: got width %d, want %d", i, resultPage.Width, expectedPage.Width)
+			}
+			if resultPage.Height != expectedPage.Height {
+				t.Errorf("page at index %d: got height %d, want %d", i, resultPage.Height, expectedPage.Height)
+			}
 		}
 	}
 }
@@ -247,25 +277,25 @@ func TestCreatePagesJSON(t *testing.T) {
 func TestCreatePagesJSONErrorCases(t *testing.T) {
 	tests := []struct {
 		name      string
-		files     []string
+		pages     []archives.Page
 		outputDir string
 		expectErr bool
 	}{
 		{
 			name:      "nonexistent directory",
-			files:     []string{"01.jpg"},
+			pages:     []archives.Page{{Path: "01.jpg", Width: 800, Height: 600}},
 			outputDir: "/nonexistent/path/that/does/not/exist",
 			expectErr: true,
 		},
 		{
-			name:      "empty files list",
-			files:     []string{},
+			name:      "empty pages list",
+			pages:     []archives.Page{},
 			outputDir: t.TempDir(),
 			expectErr: false,
 		},
 		{
-			name:      "nil files list",
-			files:     nil,
+			name:      "nil pages list",
+			pages:     nil,
 			outputDir: t.TempDir(),
 			expectErr: false,
 		},
@@ -273,7 +303,7 @@ func TestCreatePagesJSONErrorCases(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := createPagesJSON(tt.files, tt.outputDir)
+			err := createPagesJSON(tt.pages, tt.outputDir)
 			if tt.expectErr && err == nil {
 				t.Error("expected error, got nil")
 			}

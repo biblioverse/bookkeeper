@@ -106,7 +106,7 @@ func getBookInfoPDF(path string) (BookInfo, error) {
 }
 
 // extractPDF renders PDF pages as JPEG images using go-pdfium
-func extractPDF(inputFile, outputFolder string) ([]string, error) {
+func extractPDF(inputFile, outputFolder string) ([]Page, error) {
 	// Load the PDF file into a byte array
 	pdfBytes, err := ioutil.ReadFile(inputFile)
 	if err != nil {
@@ -134,7 +134,7 @@ func extractPDF(inputFile, outputFolder string) ([]string, error) {
 		return nil, fmt.Errorf("failed to get page count: %w", err)
 	}
 
-	var extractedFiles []string
+	var pages []Page
 
 	// Extract each page as JPEG
 	for pageNum := 0; pageNum < pageCount.PageCount; pageNum++ {
@@ -151,6 +151,10 @@ func extractPDF(inputFile, outputFolder string) ([]string, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to render page %d: %w", pageNum+1, err)
 		}
+
+		// Get image dimensions from the rendered image
+		width := renderPage.Result.Image.Bounds().Dx()
+		height := renderPage.Result.Image.Bounds().Dy()
 
 		// Generate filename with zero-padded page number
 		filename := fmt.Sprintf("page_%02d.jpg", pageNum+1)
@@ -169,9 +173,13 @@ func extractPDF(inputFile, outputFolder string) ([]string, error) {
 			return nil, fmt.Errorf("failed to encode page %d as JPEG: %w", pageNum+1, err)
 		}
 
-		// Add to extracted files list
-		extractedFiles = append(extractedFiles, filename)
+		// Add to pages list with dimensions
+		pages = append(pages, Page{
+			Path:   filename,
+			Width:  width,
+			Height: height,
+		})
 	}
 
-	return extractedFiles, nil
+	return pages, nil
 }

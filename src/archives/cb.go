@@ -42,7 +42,7 @@ func getBookInfoCB(path string) (BookInfo, error) {
 }
 
 // extractArchive extracts files from archive formats (CBZ, CBR, etc.)
-func extractArchive(inputFile, outputFolder string) ([]string, error) {
+func extractArchive(inputFile, outputFolder string) ([]Page, error) {
 	archive, err := unarr.NewArchive(inputFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open archive: %w", err)
@@ -55,24 +55,43 @@ func extractArchive(inputFile, outputFolder string) ([]string, error) {
 		return nil, fmt.Errorf("failed to extract archive: %w", err)
 	}
 
-	// Filter out directories and convert to relative paths
-	var relativeFiles []string
+	// Filter out directories and convert to Page structs with dimensions
+	var pages []Page
 	for _, filePath := range extractedFiles {
 		// Skip directories
 		if strings.HasSuffix(filePath, "/") {
 			continue
 		}
 
+		if !validImage(filePath) {
+			continue
+		}
+
 		// The Extract method returns relative paths, so we can use them directly
 		// But let's make sure they're clean relative paths
 		cleanPath := filepath.Clean(filePath)
-		relativeFiles = append(relativeFiles, cleanPath)
+
+		// Get full path for dimension reading
+		fullPath := filepath.Join(outputFolder, cleanPath)
+
+		// Get image dimensions
+		width, height, err := getImageDimensions(fullPath)
+		if err != nil {
+			// If we can't get dimensions, skip this file or use default values
+			continue
+		}
+
+		pages = append(pages, Page{
+			Path:   cleanPath,
+			Width:  width,
+			Height: height,
+		})
 	}
 
 	// Apply natural sorting for archive files
-	sort.Slice(relativeFiles, func(i, j int) bool {
-		return natural.Less(relativeFiles[i], relativeFiles[j])
+	sort.Slice(pages, func(i, j int) bool {
+		return natural.Less(pages[i].Path, pages[j].Path)
 	})
 
-	return relativeFiles, nil
+	return pages, nil
 }

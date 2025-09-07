@@ -30,10 +30,22 @@ Extraction complete. 36 files extracted to .../out
 ```
 
 ```json
-[
-  "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF101.jpg",
-  "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF102.jpg",
-  "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF103.jpg",
-  // ...
-]
+{
+  "pages": [
+    {
+      "path": "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF101.jpg",
+      "width": 1075,
+      "height": 1528
+    },
+    {
+      "path": "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF102.jpg",
+      "width": 967,
+      "height": 1462
+    },
+    {
+      "path": "Full Of Fun 001 (c2c) (1957) (ABPC)/FullF103.jpg",
+      "width": 964,
+      "height": 1405
+    },
+    ...
 ```
