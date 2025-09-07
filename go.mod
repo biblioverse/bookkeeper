@@ -2,5 +2,17 @@ module github.com/biblioteca/bookkeeper
 
 go 1.23.3
 
-require rsc.io/pdf v0.1.1
-require github.com/gen2brain/go-unarr v0.2.4
+require (
+	github.com/gen2brain/go-unarr v0.2.4
+	github.com/klippa-app/go-pdfium v1.17.1
+	github.com/maruel/natural v1.1.1
+)
+
+require (
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/jolestar/go-commons-pool/v2 v2.1.2 // indirect
+	github.com/tetratelabs/wazero v1.9.0 // indirect
+	golang.org/x/image v0.30.0 // indirect
+	golang.org/x/net v0.42.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
+)

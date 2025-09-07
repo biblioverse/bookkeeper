@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 
 	"github.com/biblioteca/bookkeeper/src/archives"
-	"github.com/biblioteca/bookkeeper/src/utils"
 )
 
 type metadata struct {
@@ -24,6 +23,7 @@ type errorMetadata struct {
 	Error  string `json:"error"`
 }
 
+// Scan scans the given path recursively for book files and prints their metadata as JSON lines
 func Scan(scanPath string) error {
 	abs, err := filepath.Abs(scanPath)
 	if err != nil {
@@ -38,7 +38,7 @@ func Scan(scanPath string) error {
 		if d.IsDir() {
 			return nil
 		}
-		if !utils.IsValidBookFile(path) {
+		if !archives.IsValidBookFile(path) {
 			return nil
 		}
 
