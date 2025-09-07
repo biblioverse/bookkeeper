@@ -11,25 +11,25 @@ import (
 
 func TestGetBookInfoCBZ(t *testing.T) {
 	path := filepath.Join("..", "..", "fixtures", "Full of Fun", "Full_of_Fun_001__Decker_Pub._1957.08__c2c___soothsayr_Yoc.cbz")
-	
+
 	book, err := getBookInfoCB(path)
 	require.NoError(t, err, "should successfully read CBZ file")
-	
+
 	assert.Greater(t, book.Pages, 0, "should have more than 0 pages")
 	assert.NotEmpty(t, book.Title, "title should not be empty")
-	
+
 	t.Logf("CBZ: Title=%s, Pages=%d", book.Title, book.Pages)
 }
 
 func TestGetBookInfoCBR(t *testing.T) {
 	path := filepath.Join("..", "..", "fixtures", "Full of Fun", "Full_Of_Fun_001__c2c___1957___ABPC_.cbr")
-	
+
 	book, err := getBookInfoCB(path)
 	require.NoError(t, err, "should successfully read CBR file")
-	
+
 	assert.Greater(t, book.Pages, 0, "should have more than 0 pages")
 	assert.NotEmpty(t, book.Title, "title should not be empty")
-	
+
 	t.Logf("CBR: Title=%s, Pages=%d", book.Title, book.Pages)
 }
 
@@ -79,7 +79,7 @@ func TestExtractCBZ(t *testing.T) {
 
 		// Verify it's an image file
 		ext := strings.ToLower(filepath.Ext(page.Path))
-		assert.Contains(t, []string{".jpg", ".jpeg", ".png", ".webp"}, ext, 
+		assert.Contains(t, []string{".jpg", ".jpeg", ".png", ".webp"}, ext,
 			"extracted file %s should be an image file", page.Path)
 
 		// Verify dimensions are set
@@ -94,7 +94,7 @@ func TestExtractCBZ(t *testing.T) {
 
 	for i, page := range extractedFiles {
 		if i < len(expectedOrder) {
-			assert.Equal(t, expectedOrder[i], page.Path, 
+			assert.Equal(t, expectedOrder[i], page.Path,
 				"file order should match expected order at index %d", i)
 		}
 	}
@@ -121,7 +121,7 @@ func TestExtractCBR(t *testing.T) {
 
 		// Verify it's an image file
 		ext := strings.ToLower(filepath.Ext(page.Path))
-		assert.Contains(t, []string{".jpg", ".jpeg", ".png", ".webp"}, ext, 
+		assert.Contains(t, []string{".jpg", ".jpeg", ".png", ".webp"}, ext,
 			"extracted file %s should be an image file", page.Path)
 
 		// Verify dimensions are set
