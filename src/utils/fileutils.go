@@ -5,16 +5,12 @@ import (
 	"strings"
 )
 
-func IsCBZ(path string) bool {
-	ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(path), "."))
-	return ext == "cbz"
-}
-
-func IsPDF(path string) bool {
-	ext := strings.ToLower(strings.TrimPrefix(filepath.Ext(path), "."))
-	return ext == "pdf"
+// getFileExtension extracts and normalizes the file extension from a path
+func getFileExtension(path string) string {
+	return strings.ToLower(strings.TrimPrefix(filepath.Ext(path), "."))
 }
 
 func IsValidBookFile(path string) bool {
-	return IsCBZ(path) || IsPDF(path)
+	ext := getFileExtension(path)
+	return ext == "cbz" || ext == "cbr" || ext == "cb7" || ext == "cbt" || ext == "pdf"
 }

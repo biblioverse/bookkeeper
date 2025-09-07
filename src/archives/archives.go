@@ -18,11 +18,11 @@ type BookInfo struct {
 func GetBookInfo(path string) (BookInfo, error) {
 	ext := filepath.Ext(path)
 	switch strings.ToLower(ext) {
-	case ".cbz", ".cbr":
+	case ".cbz", ".cbr", ".cb7", ".cbt":
 		return getBookInfoCB(path)
 	case ".pdf":
 		return getBookInfoPDF(path)
 	default:
-		return BookInfo{}, fmt.Errorf("We don't know how to open this archive '%s'", path)
+		return BookInfo{}, fmt.Errorf("we don't know how to open this archive '%s'", path)
 	}
 }

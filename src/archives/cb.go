@@ -1,10 +1,10 @@
 package archives
 
 import (
-	"archive/zip"
-	"fmt"
 	"path/filepath"
 	"strings"
+
+	"github.com/gen2brain/go-unarr"
 )
 
 func validImage(name string) bool {
@@ -13,19 +13,23 @@ func validImage(name string) bool {
 }
 
 func getBookInfoCB(path string) (BookInfo, error) {
-	if strings.ToLower(filepath.Ext(path)) != ".cbz" {
-		return BookInfo{}, fmt.Errorf("unsupported comic archive: %s", path)
-	}
-
-	r, err := zip.OpenReader(path)
+	a, err := unarr.NewArchive(path)
 	if err != nil {
 		return BookInfo{}, err
 	}
-	defer r.Close()
+	defer a.Close()
+
+	names, err := a.List()
+	if err != nil {
+		return BookInfo{}, err
+	}
 
 	pages := 0
-	for _, f := range r.File {
-		if !f.FileInfo().IsDir() && validImage(f.Name) {
+	for _, name := range names {
+		if strings.HasSuffix(name, "/") {
+			continue
+		}
+		if validImage(name) {
 			pages++
 		}
 	}
