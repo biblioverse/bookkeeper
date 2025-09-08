@@ -7,7 +7,7 @@ require (
 	github.com/klippa-app/go-pdfium v1.17.1
 	github.com/maruel/natural v1.1.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/image v0.30.0
+	golang.org/x/image v0.31.0
 )
 
 require (
