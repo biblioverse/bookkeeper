@@ -33,6 +33,38 @@ func TestGetBookInfoCBR(t *testing.T) {
 	t.Logf("CBR: Title=%s, Pages=%d", book.Title, book.Pages)
 }
 
+func TestGetBookInfoCBZWithComicInfoInSubdirectory(t *testing.T) {
+	path := filepath.Join("..", "..", "fixtures", "dummy_book.cbz")
+
+	book, err := getBookInfoCB(path)
+	require.NoError(t, err, "should successfully read CBZ file")
+
+	// This test specifically verifies that ComicInfo.xml can be found
+	// in a subdirectory (book/ComicInfo.xml) instead of just at the root
+	// The ComicInfo.xml contains PageCount=5, so we should get 5 pages
+	assert.Equal(t, 5, book.Pages, "should have 5 pages as specified in ComicInfo.xml")
+	assert.Equal(t, "Test Comic Book", book.Title, "should use title from ComicInfo.xml")
+
+	t.Logf("CBZ with ComicInfo in subdirectory: Title=%s, Pages=%d", book.Title, book.Pages)
+}
+
+func TestGetBookInfoCBZFallbackBehavior(t *testing.T) {
+	// Test with a CBZ that doesn't have ComicInfo.xml to verify fallback behavior
+	path := filepath.Join("..", "..", "fixtures", "Full of Fun", "Full_of_Fun_001__Decker_Pub._1957.08__c2c___soothsayr_Yoc.cbz")
+
+	book, err := getBookInfoCB(path)
+	require.NoError(t, err, "should successfully read CBZ file")
+
+	assert.Greater(t, book.Pages, 0, "should have more than 0 pages")
+	assert.NotEmpty(t, book.Title, "title should not be empty")
+
+	// This should use filename as title (fallback behavior)
+	expectedTitle := "Full_of_Fun_001__Decker_Pub._1957.08__c2c___soothsayr_Yoc"
+	assert.Equal(t, expectedTitle, book.Title, "should use filename as title when ComicInfo.xml is not found")
+
+	t.Logf("CBZ fallback behavior: Title=%s, Pages=%d", book.Title, book.Pages)
+}
+
 func TestValidImage(t *testing.T) {
 	tests := []struct {
 		name     string

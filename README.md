@@ -4,11 +4,11 @@ A to extract metadata and pages from your books in various formats
 
 |       Feature | .cbr | .cbz | .cb7 | .cbt | .pdf | .epub | .mobi |
 | ------------: | :--: | :--: | :--: | :--: | :--: | :---: | :---: |
-|      Get info | ⚠️¹  | ⚠️¹  | ⚠️¹  | ⚠️¹  |  ✅  |  ✅   |  ❌   |
+|      Get info | ✅¹  | ✅¹  | ✅¹  | ✅¹  |  ✅  |  ✅   |  ❌   |
 | Extract pages |  ✅  |  ✅  |  ✅  |  ✅  |  ✅  |   -   |   -   |
 | Extract Cover |  ❌  |  ❌  |  ❌  |  ❌  |  ❌  |  ❌   |  ❌   |
 
-1. Metadata is not yet extracted from [`ComicInfo.xml`](https://github.com/anansi-project/comicinfo)
+1. Also supports [`ComicInfo.xml`](https://github.com/anansi-project/comicinfo) version 1, 2, and 2.1
 
 ## Commands
 
