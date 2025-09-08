@@ -23,12 +23,39 @@ type Page struct {
 
 // BookInfo holds metadata about a book
 type BookInfo struct {
-	Title         string   `json:"title"`
-	Pages         int      `json:"pages"`
-	Authors       []string `json:"authors,omitempty"`
-	Publisher     string   `json:"publisher,omitempty"`
-	PublishedDate string   `json:"published_date,omitempty"`
-	Keywords      []string `json:"keywords,omitempty"`
+	// Book title
+	Title string `json:"title"`
+
+	// SubTitle represents sub-titles.
+	SubTitle []string `json:"subtitle,omitempty"`
+
+	// Language element specifies the language of the content of the
+	// given Rendition.
+	Language []string `json:"language,omitempty"`
+
+	// Description provides a description of the publication's content.
+	Description string `json:"description,omitempty"`
+
+	// Series is the series to which this book belongs to.
+	Series string `json:"series,omitempty"`
+
+	// SeriesIndex is the position in the series to which the book belongs to.
+	SeriesIndex string `json:"series_index,omitempty"`
+
+	// Number of pages (if known)
+	Pages int `json:"pages"`
+
+	// Authors of the book
+	Authors []string `json:"authors,omitempty"`
+
+	// Publisher of the book
+	Publisher string `json:"publisher,omitempty"`
+
+	// PublishedDate is the publication date as a string
+	PublishedDate string `json:"published_date,omitempty"`
+
+	// Keywords or subjects associated with the book
+	Keywords []string `json:"keywords,omitempty"`
 }
 
 // GetBookInfo retrieves metadata from a book archive or PDF file
@@ -39,6 +66,8 @@ func GetBookInfo(path string) (BookInfo, error) {
 		return getBookInfoCB(path)
 	case ".pdf":
 		return getBookInfoPDF(path)
+	case ".epub":
+		return getBookInfoEPUB(path)
 	default:
 		return BookInfo{}, fmt.Errorf("we don't know how to open this archive '%s'", path)
 	}
@@ -97,5 +126,5 @@ func getFileExtension(path string) string {
 // IsValidBookFile checks if the file has a valid book file extension
 func IsValidBookFile(path string) bool {
 	ext := getFileExtension(path)
-	return ext == "cbz" || ext == "cbr" || ext == "cb7" || ext == "cbt" || ext == "pdf"
+	return ext == "cbz" || ext == "cbr" || ext == "cb7" || ext == "cbt" || ext == "pdf" || ext == "epub"
 }

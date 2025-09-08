@@ -4,7 +4,7 @@ A to extract metadata and pages from your books in various formats
 
 |       Feature | .cbr | .cbz | .cb7 | .cbt | .pdf | .epub | .mobi |
 | ------------: | :--: | :--: | :--: | :--: | :--: | :---: | :---: |
-|      Get info | ⚠️¹  | ⚠️¹  | ⚠️¹  | ⚠️¹  |  ✅  |  ❌   |  ❌   |
+|      Get info | ⚠️¹  | ⚠️¹  | ⚠️¹  | ⚠️¹  |  ✅  |  ✅   |  ❌   |
 | Extract pages |  ✅  |  ✅  |  ✅  |  ✅  |  ✅  |   -   |   -   |
 | Extract Cover |  ❌  |  ❌  |  ❌  |  ❌  |  ❌  |  ❌   |  ❌   |
 
