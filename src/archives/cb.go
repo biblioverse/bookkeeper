@@ -15,6 +15,19 @@ func validImage(name string) bool {
 	return strings.HasSuffix(l, ".jpg") || strings.HasSuffix(l, ".jpeg") || strings.HasSuffix(l, ".png") || strings.HasSuffix(l, ".webp")
 }
 
+func getPagesCountCB(names []string) int {
+	pages := 0
+	for _, n := range names {
+		if strings.HasSuffix(n, "/") {
+			continue
+		}
+		if validImage(n) {
+			pages++
+		}
+	}
+	return pages
+}
+
 func getBookInfoCB(path string) (BookInfo, error) {
 	a, err := unarr.NewArchive(path)
 	if err != nil {
@@ -27,16 +40,38 @@ func getBookInfoCB(path string) (BookInfo, error) {
 		return BookInfo{}, err
 	}
 
-	pages := 0
+	// Check for ComicInfo.xml anywhere in the archive and parse it if found
 	for _, name := range names {
-		if strings.HasSuffix(name, "/") {
-			continue
-		}
-		if validImage(name) {
-			pages++
+		if strings.EqualFold(filepath.Base(name), "ComicInfo.xml") {
+			err := a.EntryFor(name)
+			if err != nil {
+				// If we can't find ComicInfo.xml, continue with fallback
+				break
+			}
+
+			data, err := a.ReadAll()
+			if err != nil {
+				// If we can't read ComicInfo.xml, continue with fallback
+				break
+			}
+
+			bookInfo, err := parseComicInfo(data)
+			if err != nil {
+				// If we can't parse ComicInfo.xml, continue with fallback
+				break
+			}
+
+			// Count pages if not already set in ComicInfo
+			if bookInfo.Pages == 0 {
+				bookInfo.Pages = getPagesCountCB(names)
+			}
+
+			return bookInfo, nil
 		}
 	}
 
+	// Fallback: count pages and use filename as title
+	pages := getPagesCountCB(names)
 	title := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 	return BookInfo{Title: title, Pages: pages}, nil
 }

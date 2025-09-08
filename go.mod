@@ -1,9 +1,10 @@
 module github.com/biblioteca/bookkeeper
 
-go 1.23.3
+go 1.24.1
 
 require (
 	github.com/gen2brain/go-unarr v0.2.4
+	github.com/hekmon/go-comicinfo v1.0.0
 	github.com/klippa-app/go-pdfium v1.17.1
 	github.com/maruel/natural v1.1.1
 	github.com/pirmd/epub v0.3.1
