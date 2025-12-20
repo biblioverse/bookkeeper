@@ -6,7 +6,7 @@ require (
 	github.com/gen2brain/go-unarr v0.2.4
 	github.com/hekmon/go-comicinfo v1.0.0
 	github.com/klippa-app/go-pdfium v1.17.2
-	github.com/maruel/natural v1.2.1
+	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/image v0.34.0
