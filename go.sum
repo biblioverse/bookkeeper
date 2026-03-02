@@ -29,6 +29,8 @@ github.com/klippa-app/go-pdfium v1.17.2 h1:vlaF4b+4Uw7GtpkVzysgfEy00/1v1nFgb7uO3
 github.com/klippa-app/go-pdfium v1.17.2/go.mod h1:Esq2YX5JCdA+UHzMNPEmV62rqbgvIiNUj8s+EZfgHpM=
 github.com/klippa-app/go-pdfium v1.17.3 h1:j+3VnnJvnVdLV16fPugN43GvucyfXIDXSg0Z7wSQ0yg=
 github.com/klippa-app/go-pdfium v1.17.3/go.mod h1:T7ZFRT9CpW8TKG+P5/4cNa/OvTzSZ+CqzasPz5UeuV4=
+github.com/klippa-app/go-pdfium v1.18.0 h1:QQFmAzxp+ZnVIt44nQgM0hW8FOGQRaMOe7dGf6Ejvgg=
+github.com/klippa-app/go-pdfium v1.18.0/go.mod h1:l6mup1Q46TWfvPQcZM6VhWrhWPmP7SOke/SLQXCt/jk=
 github.com/maruel/natural v1.1.1 h1:Hja7XhhmvEFhcByqDoHz9QZbkWey+COd9xWfCfn1ioo=
 github.com/maruel/natural v1.1.1/go.mod h1:v+Rfd79xlw1AgVBjbO0BEQmptqb5HvL/k9GRHB7ZKEg=
 github.com/maruel/natural v1.2.1 h1:G/y4pwtTA07lbQsMefvsmEO0VN0NfqpxprxXDM4R/4o=
@@ -103,6 +105,8 @@ golang.org/x/net v0.44.0 h1:evd8IRDyfNBMBTTY5XRF1vaZlD+EmWx6x8PkhR04H/I=
 golang.org/x/net v0.44.0/go.mod h1:ECOoLqd5U3Lhyeyo/QDCEVQ4sNgYsqvCZ722XogGieY=
 golang.org/x/net v0.50.0 h1:ucWh9eiCGyDR3vtzso0WMQinm2Dnt8cFMuQa9K33J60=
 golang.org/x/net v0.50.0/go.mod h1:UgoSli3F/pBgdJBHCTc+tp3gmrU4XswgGRgtnwWTfyM=
+golang.org/x/net v0.51.0 h1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=
+golang.org/x/net v0.51.0/go.mod h1:aamm+2QF5ogm02fjy5Bb7CQ0WMt1/WVM7FtyaTLlA9Y=
 golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 golang.org/x/sync v0.1.0/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
