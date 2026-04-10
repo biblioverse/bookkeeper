@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/gen2brain/go-unarr v0.2.4
 	github.com/hekmon/go-comicinfo v1.0.0
-	github.com/klippa-app/go-pdfium v1.18.0
+	github.com/klippa-app/go-pdfium v1.18.1
 	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
 	github.com/stretchr/testify v1.11.1
@@ -18,8 +18,8 @@ require (
 	github.com/jolestar/go-commons-pool/v2 v2.1.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/tetratelabs/wazero v1.11.0 // indirect
-	golang.org/x/net v0.51.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/net v0.53.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
