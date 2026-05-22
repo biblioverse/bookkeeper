@@ -9,7 +9,7 @@ require (
 	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/image v0.40.0
+	golang.org/x/image v0.41.0
 )
 
 require (
