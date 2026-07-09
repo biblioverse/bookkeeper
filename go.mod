@@ -9,7 +9,7 @@ require (
 	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/image v0.42.0
+	golang.org/x/image v0.44.0
 )
 
 require (
@@ -20,6 +20,6 @@ require (
 	github.com/tetratelabs/wazero v1.12.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/text v0.38.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
