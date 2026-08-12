@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/gen2brain/go-unarr v0.2.4
 	github.com/hekmon/go-comicinfo v1.0.0
-	github.com/klippa-app/go-pdfium v1.19.7
+	github.com/klippa-app/go-pdfium v1.19.8
 	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
 	github.com/stretchr/testify v1.11.1
