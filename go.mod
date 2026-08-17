@@ -8,7 +8,7 @@ require (
 	github.com/klippa-app/go-pdfium v1.19.8
 	github.com/maruel/natural v1.3.0
 	github.com/pirmd/epub v0.3.1
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	golang.org/x/image v0.45.0
 )
 
