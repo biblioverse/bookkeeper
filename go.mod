@@ -7,7 +7,7 @@ require (
 	github.com/hekmon/go-comicinfo v1.0.0
 	github.com/klippa-app/go-pdfium v1.19.8
 	github.com/maruel/natural v1.3.0
-	github.com/pirmd/epub v0.3.1
+	github.com/pirmd/epub v0.3.2
 	github.com/stretchr/testify v1.12.1
 	golang.org/x/image v0.45.0
 )
