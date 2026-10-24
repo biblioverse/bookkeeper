@@ -59,6 +59,8 @@ github.com/klippa-app/go-pdfium v1.21.2 h1:cJWyt3reQyie19Z+Lw5jujoT5NHVDz3bALOo8
 github.com/klippa-app/go-pdfium v1.21.2/go.mod h1:sg9hrNV29uKb2Q/g+GU8WYTzTgtEt8QAMGzXtvLPzck=
 github.com/klippa-app/go-pdfium v1.21.3 h1:RA9LChVEg0JWYcTMPPbgJ30lSwttatl46JwElfNzkcE=
 github.com/klippa-app/go-pdfium v1.21.3/go.mod h1:sg9hrNV29uKb2Q/g+GU8WYTzTgtEt8QAMGzXtvLPzck=
+github.com/klippa-app/go-pdfium v1.21.4 h1:CalrAbIUyPIBkGU9qJX2z7yGitDrcuJT62FQT5m5CPU=
+github.com/klippa-app/go-pdfium v1.21.4/go.mod h1:d55Qev3QNMBTjv/VKA7pAV9hSyN47WZqiHI7bGc8fbc=
 github.com/maruel/natural v1.1.1 h1:Hja7XhhmvEFhcByqDoHz9QZbkWey+COd9xWfCfn1ioo=
 github.com/maruel/natural v1.1.1/go.mod h1:v+Rfd79xlw1AgVBjbO0BEQmptqb5HvL/k9GRHB7ZKEg=
 github.com/maruel/natural v1.2.1 h1:G/y4pwtTA07lbQsMefvsmEO0VN0NfqpxprxXDM4R/4o=
