@@ -3,7 +3,7 @@ module github.com/biblioteca/bookkeeper
 go 1.26.0
 
 require (
-	github.com/gen2brain/go-unarr v0.2.4
+	github.com/gen2brain/go-unarr v0.2.5
 	github.com/hekmon/go-comicinfo v1.0.0
 	github.com/klippa-app/go-pdfium v1.21.4
 	github.com/maruel/natural v1.3.0
